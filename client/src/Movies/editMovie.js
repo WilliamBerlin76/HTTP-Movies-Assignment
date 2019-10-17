@@ -10,14 +10,14 @@ const initialMovie = {
 
 const EditForm = props => {
     const [movie, setMovie] = useState(initialMovie);
-    console.log()
+    console.log(props.movies)
     useEffect(() => {
         const movieToEdit = props.movies.find(
             item => `${item.id}` === props.match.params.id
         );
         console.log(movieToEdit)    
         if (movieToEdit) setMovie(movieToEdit);
-    }, [props.movies, props.match.params.id]);
+    }, []);
 
     const handleChange = e => {
         e.persist();
@@ -25,13 +25,26 @@ const EditForm = props => {
         if (e.target.name === 'metascore'){
             value = Number(value);
         }
-
         setMovie({
             ...movie,
             [e.target.name]: value
         })
+        console.log(movie)
+    };
+
+    const handleSubmit = e => {
+        e.preventDefault()
+        axios
+        .put(`http://localhost:5000/api/movies/${movie.id}`, movie)
+        .then(res => {
+            props.updateMovies(res.data);
+            props.history.push('/')
+        })
+        .catch(err => {
+            console.log('could not put', err)
+        })
     }
- console.log(movie)
+ 
     return(
         <>
         <h2>Edit Movie</h2>
@@ -60,7 +73,7 @@ const EditForm = props => {
                 value={movie.stars}
                 onChange={handleChange}    
             />
-            <button>Save Changes</button>    
+            <button onClick={handleSubmit}>Save Changes</button>    
         </form>
         </>
     )
