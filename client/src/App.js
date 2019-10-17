@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Route } from "react-router-dom";
+import axios from 'axios';
+
 import SavedList from "./Movies/SavedList";
 import MovieList from "./Movies/MovieList";
 import Movie from "./Movies/Movie";
@@ -8,6 +10,18 @@ import EditForm from './Movies/editMovie'
 const App = () => {
   const [movies, setMovies] = useState([]);
   const [savedList, setSavedList] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:5000/api/movies')
+      .then(res => {
+        console.log(res);
+        setMovies(res.data);
+      })
+      .catch(err => {
+        console.log('no movies for u', err)
+      })
+  }, [])
 
   const addToSavedList = movie => {
     setSavedList([...savedList, movie]);

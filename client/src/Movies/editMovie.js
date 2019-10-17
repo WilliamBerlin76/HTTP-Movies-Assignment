@@ -10,9 +10,9 @@ const initialMovie = {
 
 const EditForm = props => {
     const [movie, setMovie] = useState(initialMovie);
-    console.log(props.movies)
+    console.log()
     useEffect(() => {
-        const movieToEdit =  props.movies.find(
+        const movieToEdit = props.movies.find(
             item => `${item.id}` === props.match.params.id
         );
         console.log(movieToEdit)    
