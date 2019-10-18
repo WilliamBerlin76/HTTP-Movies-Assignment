@@ -24,6 +24,8 @@ const EditForm = props => {
         let value = e.target.value;
         if (e.target.name === 'metascore'){
             value = Number(value);
+        } else if (e.target.name === 'stars'){
+            value = value.split(',')
         }
         setMovie({
             ...movie,
@@ -37,7 +39,8 @@ const EditForm = props => {
         axios
         .put(`http://localhost:5000/api/movies/${movie.id}`, movie)
         .then(res => {
-            props.updateMovies(res.data);
+            const newList = props.movies.filter(entry => entry.id !== movie.id)
+            props.updateMovies([...newList, res.data]);
             props.history.push('/')
         })
         .catch(err => {
@@ -67,6 +70,7 @@ const EditForm = props => {
                 value={movie.metascore}
                 onChange={handleChange}    
             />
+            separate stars with commas
             <input 
                 type='text'
                 name='stars'
